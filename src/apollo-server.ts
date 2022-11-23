@@ -10,10 +10,13 @@ import SessionResolver from "./resolvers/SessionResolver";
 import UserResolver from "./resolvers/UserResolver";
 import OrganizationResolver from "./resolvers/OrganizationResolver";
 import ImageResolver from "./resolvers/ImageResolver";
+import { Request, Response } from "express";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 export interface Context {
   sessionId: string;
   user: User | null;
+  res: Response;
 }
 
 export const customAuthChecker: AuthChecker<Context> = ({ context }) => {
@@ -22,22 +25,29 @@ export const customAuthChecker: AuthChecker<Context> = ({ context }) => {
 
 export default async function getServer() {
   const schema = await buildSchema({
-
-    resolvers: [UserResolver, SessionResolver, ProjectResolver, FileResolver, OrganizationResolver, ImageResolver, IssueResolver],
+    resolvers: [
+      UserResolver,
+      SessionResolver,
+      ProjectResolver,
+      FileResolver,
+      OrganizationResolver,
+      ImageResolver,
+      IssueResolver,
+    ],
 
     authChecker: customAuthChecker,
   });
 
   const apolloServer = new ApolloServer({
     schema,
-    context: async ({ req }): Promise<Context> => {
+    context: async ({ req, res }): Promise<Context> => {
       const sessionId = req.cookies.sessionId || "";
 
-      const user = await SessionUtils.userInfo({ sessionId }) || null;
+      const user = (await SessionUtils.userInfo({ sessionId })) || null;
 
-
-      return { sessionId, user };
+      return { sessionId, user, res };
     },
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
   return apolloServer;
 }

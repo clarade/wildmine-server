@@ -1,4 +1,5 @@
-import { ArgsType, Field } from 'type-graphql';
+import { Request, Response } from "express";
+import { ArgsType, Field } from "type-graphql";
 
 @ArgsType()
 class SignInInput {
@@ -10,6 +11,9 @@ class SignInInput {
 
   @Field()
   sessionId!: string;
+
+  @Field()
+  res!: Response;
 }
 
 export default SignInInput;
