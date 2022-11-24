@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 const whiteListedUrls = process.env.CORS_WHITELISTED_URLS?.split(",") || [];
 
+console.log("CORS_WHITELISTED_URLS", whiteListedUrls);
+
 export const corsOptions = {
   origin: (
     origin: string | undefined,
