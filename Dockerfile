@@ -1,16 +1,24 @@
-FROM node:lts-alpine as common
+# pull the Node.js Docker image
+FROM node:14.17.6-alpine
 
-WORKDIR /app
+# create the directory inside the container
 
-COPY package*.json ./
+WORKDIR /usr/src/
 
+# copy the package.json files from local machine to the workdir in container
+COPY package*.json .
+
+# run npm install in our local machine
 RUN npm install
 
-COPY . ./
-
-RUN npm run build
-
-FROM common as production
-CMD npm run start
 
 
+# copy the generated modules and all other files to the container
+COPY . .
+
+
+# our app is running on port 5000 within the container, so need to expose it
+EXPOSE 3001
+
+# the command that starts our app
+CMD ["npm", "run", "deploy"]
