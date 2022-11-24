@@ -11,7 +11,8 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "start": "node build/.",
-    "start:watch": "npm run build && (npm run build:watch & nodemon --inspect build/.)"
+    "start:watch": "npm run build && (npm run build:watch & nodemon --inspect build/.)",
+    "deploy": "npm run build && node ./build/index.js"
   },
   "author": "",
   "license": "ISC",
