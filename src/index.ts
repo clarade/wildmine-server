@@ -9,6 +9,7 @@ import getDatabaseConnection from "./database-connection";
 import UID from "uid-safe";
 import indexRouter from "./routes";
 import cors from "cors";
+import corsOptions from "./config/corsOptions";
 
 dotenv.config();
 
@@ -26,12 +27,7 @@ const runServer = async () => {
 
   app.use("/", indexRouter);
 
-  app.use(
-    cors({
-      origin: process.env.CORS_CLIENT_URL,
-      credentials: true,
-    })
-  );
+  app.use(cors(corsOptions));
 
   app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
