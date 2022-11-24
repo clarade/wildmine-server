@@ -40,7 +40,9 @@ const runServer = async () => {
 
       res.cookie("sessionId", uid, {
         maxAge: 900000000,
-        httpOnly: true,
+        httpOnly: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       });
 
       console.log("cookie created successfully");
