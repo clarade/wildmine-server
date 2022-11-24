@@ -10,6 +10,7 @@ import UID from "uid-safe";
 import indexRouter from "./routes";
 import cors from "cors";
 import corsOptions from "./config/corsOptions";
+import Cookies from "cookies";
 
 dotenv.config();
 
@@ -35,10 +36,13 @@ const runServer = async () => {
     // check if client sent cookie
     const { sessionId } = req.cookies;
     if (sessionId === undefined) {
+      const cookies = new Cookies(req, res, {
+        secure: process.env.NODE_ENV === "production",
+      });
       // no: set a new cookie
       const uid = UID.sync(18);
 
-      res.cookie("sessionId", uid, {
+      cookies.set("sessionId", uid, {
         maxAge: 900000000,
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
