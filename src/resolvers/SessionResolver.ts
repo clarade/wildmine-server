@@ -6,6 +6,7 @@ import LoginInput from "./input/user/LoginInput";
 import SessionUtils from "../models/utils/SessionUtils";
 import { Context } from "../apollo-server";
 import DeleteSessionInput from "./input/session/DeleteSessionInput";
+import Cookies from "cookies";
 
 @Resolver(Session)
 class SessionResolver {
@@ -41,8 +42,14 @@ class SessionResolver {
   }
 
   @Mutation(() => Session)
-  async deleteSession(@Args() { user }: DeleteSessionInput) {
-    return SessionUtils.deleteSession({ user });
+  async deleteSession(@Ctx() context: Context) {
+    const cookies = new Cookies(context.req, context.res, {
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    cookies.set("sessionId", "", {});
+    console.log(context.user);
+    return SessionUtils.deleteSession({ user: context.user?.id as number });
   }
 }
 

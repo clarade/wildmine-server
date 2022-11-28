@@ -54,9 +54,22 @@ class SessionUtils extends Session {
   }
 
   static async deleteSession({ user }: DeleteSessionInput) {
-    const session = await Session.findOneOrFail({ where: { user: user } });
+    const session = await Session.findOneOrFail({
+      where: {
+        user: {
+          id: user,
+        },
+      },
+    });
 
-    return await Session.remove(session);
+    try {
+      await Session.remove(session);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log("SESSION TO REMOVE", session);
+
+    return { uid: "Session removed" };
   }
 }
 

@@ -17,6 +17,7 @@ export interface Context {
   sessionId: string;
   user: User | null;
   res: Response;
+  req: Request;
 }
 
 export const customAuthChecker: AuthChecker<Context> = ({ context }) => {
@@ -45,7 +46,7 @@ export default async function getServer() {
 
       const user = (await SessionUtils.userInfo({ sessionId })) || null;
 
-      return { sessionId, user, res };
+      return { sessionId, user, res, req };
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
